@@ -1,5 +1,5 @@
 import { LoadFacebookUserApi } from '@/data/contracts/apis'
-import { LoadUserAccountRepository } from '@/data/contracts/repos'
+import { LoadUserAccountRepository, CreateFacebookAccountRepository } from '@/data/contracts/repos'
 import { AuthenticationError } from '@/domain/errors'
 import { FacebookAuthenticationService } from '@/data/services'
 
@@ -9,16 +9,19 @@ type SutTypes = {
   sut: FacebookAuthenticationService
   loadFacebookUserApi: MockProxy<LoadFacebookUserApi>
   loadUserAccountRepo: MockProxy<LoadUserAccountRepository>
+  createFacebookAccountRepo: MockProxy<CreateFacebookAccountRepository>
 }
 
 const makeSut = (): SutTypes => {
   const loadFacebookUserApi = mock<LoadFacebookUserApi>()
   const loadUserAccountRepo = mock<LoadUserAccountRepository>()
-  const sut = new FacebookAuthenticationService(loadFacebookUserApi, loadUserAccountRepo)
+  const createFacebookAccountRepo = mock<CreateFacebookAccountRepository>()
+  const sut = new FacebookAuthenticationService(loadFacebookUserApi, loadUserAccountRepo, createFacebookAccountRepo)
   return {
     sut,
     loadFacebookUserApi,
-    loadUserAccountRepo
+    loadUserAccountRepo,
+    createFacebookAccountRepo
   }
 }
 
@@ -44,7 +47,7 @@ describe('FacebookAuthenticationService', () => {
     expect(authResult).toEqual(new AuthenticationError())
   })
 
-  it('Should call LoadUserByEmailRepo when LoadFacebookUserApi return data', async () => {
+  it('Should call LoadUserByEmailRepo when LoadFacebookUser return data', async () => {
     const { sut, loadFacebookUserApi, loadUserAccountRepo } = makeSut()
     loadFacebookUserApi.loadUser.mockResolvedValueOnce(fbData)
     await sut.perform({ token })
@@ -52,11 +55,12 @@ describe('FacebookAuthenticationService', () => {
     expect(loadUserAccountRepo.load).toHaveBeenCalledTimes(1)
   })
 
-  it('Should call LoadUserByEmailRepo when LoadFacebookUserApi return data', async () => {
-    const { sut, loadFacebookUserApi, loadUserAccountRepo } = makeSut()
+  it('Should call CreateUserAccountRepo when LoadUserByEmailRepo return undefined', async () => {
+    const { sut, loadFacebookUserApi, loadUserAccountRepo, createFacebookAccountRepo } = makeSut()
     loadFacebookUserApi.loadUser.mockResolvedValueOnce(fbData)
+    loadUserAccountRepo.load.mockResolvedValueOnce(undefined)
     await sut.perform({ token })
-    expect(loadUserAccountRepo.load).toHaveBeenCalledWith({ email: fbData.email })
-    expect(loadUserAccountRepo.load).toHaveBeenCalledTimes(1)
+    expect(createFacebookAccountRepo.createFromFacebook).toHaveBeenCalledWith(fbData)
+    expect(createFacebookAccountRepo.createFromFacebook).toHaveBeenCalledTimes(1)
   })
 })
