@@ -69,4 +69,12 @@ describe('FacebookApi', () => {
       email: 'any_fb_email'
     })
   })
+
+  test('Sould return undefined if HttpGetClient throws', async () => {
+    httpClient.get.mockReset().mockRejectedValueOnce(new Error('fb_error'))
+
+    const fbuser = await sut.loadUser({ token: 'any_client_token' })
+
+    expect(fbuser).toBeUndefined()
+  })
 })
