@@ -2,7 +2,7 @@ import { env } from '@/main/config/env'
 
 import { ConnectionOptions } from 'typeorm'
 
-export const config: ConnectionOptions = {
+export const typeOrmPgConnection: ConnectionOptions = {
   type: 'postgres',
   host: env.pg.host,
   port: parseInt(env.pg.port),
