@@ -53,9 +53,12 @@ describe('Infra JwtTokenHandler', () => {
 
   describe('validateToken handle', () => {
     let token: string
+    let key: string
 
     beforeAll(() => {
       token = 'any_token'
+      key = 'any_token'
+      fakeJwt.verify.mockImplementation(() => ({ key }))
     })
 
     it('Shoul call sign with correct params', async () => {
@@ -63,6 +66,12 @@ describe('Infra JwtTokenHandler', () => {
 
       expect(fakeJwt.verify).toHaveBeenCalledWith(token, secret)
       expect(fakeJwt.verify).toHaveBeenCalledTimes(1)
+    })
+
+    it('Shoul return the key used to sign', async () => {
+      const generetadKey = await sut.validateToken({ token })
+
+      expect(generetadKey).toBe(key)
     })
   })
 })
