@@ -5,7 +5,8 @@
   "author": "Moldato ST <contato@moldato.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node dist/main",
+    "start": "node -r dotenv/config dist/main",
+    "dev": "ts-node-dev --respawn --transpile-only -r dotenv/config --inspect=0.0.0.0:9229 src/main",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "lint": "eslint .",
     "lint:fix": "yarn lint -- --fix",
@@ -40,6 +41,7 @@
     "rimraf": "^3.0.2",
     "supertest": "^6.1.4",
     "ts-jest": "^27.0.3",
+    "ts-node-dev": "^1.1.8",
     "typescript": "^4.3.5"
   },
   "engines": {
