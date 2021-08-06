@@ -7,7 +7,7 @@ type GenerateResult = TokenGenerator.Result
 type ValidateParams = TokenValidator.Params
 type ValidateResult = TokenValidator.Result
 
-export class JwtTokenHandler implements TokenGenerator {
+export class JwtTokenHandler implements TokenGenerator, TokenValidator {
   constructor (private readonly secret: string) { }
 
   async generateToken ({ key, expirationInMs }: GenerateParams): Promise<GenerateResult> {
