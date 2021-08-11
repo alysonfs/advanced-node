@@ -59,4 +59,10 @@ describe('ChangeProfilePicture', () => {
     expect(userProfileRepo.load).toHaveBeenCalledWith({ userId: 'any_id' })
     expect(userProfileRepo.load).toHaveBeenCalledTimes(1)
   })
+
+  it('Should not call LoadUserProfile if file exists', async () => {
+    await sut({ userId: 'any_id', file })
+
+    expect(userProfileRepo.load).not.toHaveBeenCalled()
+  })
 })
