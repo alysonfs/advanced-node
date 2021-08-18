@@ -129,4 +129,13 @@ describe('ChangeProfilePicture', () => {
 
     await expect(promise).rejects.toThrow(error)
   })
+
+  it('Should rethrows if UUIDGenerator thrwos', async () => {
+    const error = new Error('uuid_error')
+    crypto.uuid.mockImplementationOnce(() => { throw error })
+
+    const promise = sut({ userId: 'any_id', file })
+
+    await expect(promise).rejects.toThrow(error)
+  })
 })
