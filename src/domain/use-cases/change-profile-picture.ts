@@ -18,8 +18,5 @@ export const setupChangeProfilePicture: Setup = (fileStorage, crypto, userProfil
   const userProfile = new UserProfile(userId)
   userProfile.setPicture(data)
   await userProfileRepo.savePicture(userProfile)
-  return {
-    pictureUrl: userProfile.pictureUrl,
-    initials: userProfile.initials
-  }
+  return userProfile
 }
