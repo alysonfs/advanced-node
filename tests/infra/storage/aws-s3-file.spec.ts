@@ -1,4 +1,7 @@
+import { AWSS3FileStorage } from '@/infra/storage'
 
+import { config, S3 } from 'aws-sdk'
+import { mocked } from 'ts-jest/utils'
 
 jest.mock('aws-sdk')
 
