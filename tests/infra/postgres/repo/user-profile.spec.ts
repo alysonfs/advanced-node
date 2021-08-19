@@ -35,4 +35,14 @@ describe('PgUserProfileRepository', () => {
       expect(pgUser).toMatchObject({ id, email, pictureUrl: 'any_url', initials: null })
     })
   })
+
+  describe('load', () => {
+    it('Should load user profile', async () => {
+      const { id } = await pgUserRepo.save({ email: 'any_email', name: 'any_name' })
+
+      const userProfile = await sut.load({ userId: id.toString() })
+
+      expect(userProfile?.name).toBe('any_name')
+    })
+  })
 })
