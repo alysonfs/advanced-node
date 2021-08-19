@@ -13,7 +13,7 @@ export const setupChangeProfilePicture: Setup = (fileStorage, crypto, userProfil
   if (file !== undefined) {
     data.pictureUrl = await fileStorage.upload({ file, key })
   } else {
-    data.name = (await userProfileRepo.load({ userId })).name
+    data.name = (await userProfileRepo.load({ userId }))?.name
   }
   const userProfile = new UserProfile(userId)
   userProfile.setPicture(data)
