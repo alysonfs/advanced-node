@@ -34,7 +34,7 @@ describe('AWSS3FileStorage', () => {
     expect(config.update).toHaveBeenCalledTimes(1)
   })
 
-  describe('Upload', () => {
+  describe('upload', () => {
     let file: Buffer
     let putObjectPromiseSpy: jest.Mock
     let putObjectSpy: jest.Mock
@@ -83,9 +83,27 @@ describe('AWSS3FileStorage', () => {
     })
   })
 
-  describe('Delete', () => {
-    it('Should return imageUrl', async () => {
+  describe('delete', () => {
+    let deleteObjectSpy: jest.Mock
+    let deleteObjectPromiseSpy: jest.Mock
 
+    beforeAll(() => {
+      deleteObjectPromiseSpy = jest.fn()
+      deleteObjectSpy = jest.fn().mockImplementation(() => ({ promise: deleteObjectPromiseSpy }))
+      mocked(S3).mockImplementation(jest.fn().mockImplementation(() => ({
+        deleteObject: deleteObjectSpy
+      })))
+    })
+
+    it('Should call deleteObject with correct input', async () => {
+      await sut.delete({ key })
+
+      expect(deleteObjectSpy).toHaveBeenCalledWith({
+        Bucket: bucket,
+        Key: key
+      })
+      expect(deleteObjectSpy).toHaveBeenCalledTimes(1)
+      expect(deleteObjectPromiseSpy).toHaveBeenCalledTimes(1)
     })
   })
 })
