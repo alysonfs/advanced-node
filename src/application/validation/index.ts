@@ -1,4 +1,5 @@
-export * from './required-string'
 export * from './validator'
+export * from './required-string'
+export * from './required'
 export * from './composite'
 export * from './builder'
